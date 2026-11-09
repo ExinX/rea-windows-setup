@@ -3,19 +3,7 @@
     "rea": {
       "command": "cmd.exe",
       "args": ["/d", "/c", "npx", "-y", "rea-agents@6.8.0", "mcp"],
-      "env": {
-        "GHIDRA_INSTALL_DIR": "C:\\Tools\\ghidra_12.1.4_PUBLIC",
-        "JAVA_HOME": "C:\\Tools\\jdk21\\jdk-21.0.13+9",
-        "REA_JADX_MCP_JAR": "C:\\Users\\<you>\\.local\\share\\rea\\android\\jadx-headless-mcp-0.7.1-all.jar",
-        "REA_APKTOOL_COMMAND": "C:\\Tools\\apktool\\apktool.cmd",
-        "REA_WAKARU_COMMAND": "C:\\Users\\<you>\\AppData\\Roaming\\npm\\wakaru.cmd",
-        "REA_BROWSER_EXECUTABLE": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-        "REA_TSHARK_COMMAND": "C:\\Program Files\\Wireshark\\tshark.exe",
-        "REA_CAPINFOS_COMMAND": "C:\\Program Files\\Wireshark\\capinfos.exe",
-        "REA_WABT_BIN_DIRECTORY": "C:\\Tools\\wabt\\wabt-1.0.42\\bin",
-        "REA_ADB_PATH": "C:\\Users\\<you>\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Google.PlatformTools_Microsoft.Winget.Source_8wekyb3d8bbwe\\platform-tools\\adb.exe",
-        "PATH": "C:\\Tools\\jdk21\\jdk-21.0.13+9\\bin;C:\\Program Files\\nodejs;C:\\Users\\<you>\\AppData\\Roaming\\npm;C:\\Tools\\apktool;C:\\Program Files\\Wireshark;C:\\Tools\\wabt\\wabt-1.0.42\\bin;C:\\Program Files\\7-Zip;C:\\Windows\\system32;C:\\Windows"
-      }
+      "env": {}
     }
   }
 }
