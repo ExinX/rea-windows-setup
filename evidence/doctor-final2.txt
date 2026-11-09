@@ -1,0 +1,239 @@
+﻿healthy: true
+environment_healthy: true
+scope:
+  mode: audit-wide
+  clients: []
+  providers: []
+  skill: false
+  target: null
+scope_checks[15]:
+  - name: node
+    ok: true
+    classification: healthy
+    detail: 26.13.0
+    details:
+      runtime: node
+      version: 26.13.0
+  - name: host
+    ok: true
+    classification: healthy
+    detail: win32 x64
+  - name: hopper
+    ok: false
+    classification: missing_analysis_engine
+    remediation: "Run rea setup to install Hopper, or set HOPPER_LAUNCHER_PATH."
+  - name: ghidra
+    ok: true
+    classification: healthy
+    detail: "C:\\Tools\\ghidra_12.1.4_PUBLIC"
+  - name: ghidra-platform
+    ok: true
+    classification: healthy
+    detail: win32
+  - name: ghidra-architecture
+    ok: true
+    classification: healthy
+    detail: x64
+  - name: ghidra-installation
+    ok: true
+    classification: healthy
+    detail: "C:\\Tools\\ghidra_12.1.4_PUBLIC\\Ghidra\\application.properties"
+  - name: ghidra-version
+    ok: true
+    classification: healthy
+    detail: 12.1.4
+  - name: ghidra-headless
+    ok: true
+    classification: healthy
+    detail: "C:\\Tools\\ghidra_12.1.4_PUBLIC\\support\\analyzeHeadless.bat"
+  - name: ghidra-native_decompiler
+    ok: true
+    classification: healthy
+    detail: "C:\\Tools\\ghidra_12.1.4_PUBLIC\\Ghidra\\Features\\Decompiler\\os\\win_x86_64\\decompile.exe reports pe x86_64, which matches win32/x64"
+  - name: ghidra-java
+    ok: true
+    classification: healthy
+    detail: "21.0.13; 64-bit; JDK; C:\\Tools\\jdk21\\jdk-21.0.13+9; accepted a 64-bit full JDK 21 or newer"
+  - name: ghidra-native_authority
+    ok: true
+    classification: healthy
+    detail: "Verified Windows native Job Object, private DACL, and reparse-safe handle controls; local NTFS only."
+  - name: ida-registration
+    ok: false
+    classification: missing_analysis_engine
+    detail: IDA MCP registration is not configured.
+    remediation: Set REA_IDA_MCP_CONFIG to your upstream IDA MCP registration JSON; see docs/ida-provider.md.
+  - name: jadx
+    ok: true
+    classification: healthy
+    detail: "JADX MCP bridge JAR validated at C:\\Users\\piotr\\.local\\share\\rea\\android\\jadx-headless-mcp-0.7.1-all.jar; its path is recorded for agent registrations. This checks configuration, not whether a selected APK fits in the worker's memory."
+    details:
+      operation_timeout_ms: 120000
+  - name: kuna-installation
+    ok: false
+    classification: missing_analysis_engine
+    detail: "Set REA_KUNA_COMMAND to the absolute path of a caller-supplied kuna executable (verified with 1.833). REA does not download, install or update Kuna."
+    remediation: "Set REA_KUNA_COMMAND to the absolute path of a caller-supplied kuna executable (verified with 1.833). REA does not download, install or update Kuna."
+    details:
+      configured: false
+informational_checks: []
+providerInspections[4]:
+  - id: ghidra
+    configured: true
+    available: true
+    providerVersion: 12.1.4
+    registrationEnvironment:
+      GHIDRA_INSTALL_DIR: "C:\\Tools\\ghidra_12.1.4_PUBLIC"
+      JAVA_HOME: "C:\\Tools\\jdk21\\jdk-21.0.13+9"
+    checks[9]{name,ok,code,detail,remediation,classification}:
+      configuration,true,null,"C:\\Tools\\ghidra_12.1.4_PUBLIC",null,config_drift
+      platform,true,null,win32,null,unsupported_host
+      architecture,true,null,x64,null,unsupported_host
+      installation,true,null,"C:\\Tools\\ghidra_12.1.4_PUBLIC\\Ghidra\\application.properties",null,config_drift
+      version,true,null,12.1.4,null,config_drift
+      headless,true,null,"C:\\Tools\\ghidra_12.1.4_PUBLIC\\support\\analyzeHeadless.bat",null,config_drift
+      native_decompiler,true,null,"C:\\Tools\\ghidra_12.1.4_PUBLIC\\Ghidra\\Features\\Decompiler\\os\\win_x86_64\\decompile.exe reports pe x86_64, which matches win32/x64",null,config_drift
+      java,true,null,"21.0.13; 64-bit; JDK; C:\\Tools\\jdk21\\jdk-21.0.13+9; accepted a 64-bit full JDK 21 or newer",null,config_drift
+      native_authority,true,null,"Verified Windows native Job Object, private DACL, and reparse-safe handle controls; local NTFS only.",null,unsupported_host
+  - id: ida
+    configured: false
+    available: false
+    providerVersion: null
+    registrationEnvironment:
+    checks[1]{name,ok,code,detail,remediation,classification}:
+      registration,false,not_configured,IDA MCP registration is not configured.,Set REA_IDA_MCP_CONFIG to your upstream IDA MCP registration JSON; see docs/ida-provider.md.,missing_analysis_engine
+  - id: jadx
+    configured: true
+    available: true
+    providerVersion: null
+    registrationEnvironment:
+      REA_JADX_MCP_JAR: "C:\\Users\\piotr\\.local\\share\\rea\\android\\jadx-headless-mcp-0.7.1-all.jar"
+      JAVA_HOME: "C:\\Tools\\jdk21\\jdk-21.0.13+9"
+    checks[1]:
+      - name: configuration
+        ok: true
+        code: null
+        detail: "JADX MCP bridge JAR validated at C:\\Users\\piotr\\.local\\share\\rea\\android\\jadx-headless-mcp-0.7.1-all.jar; its path is recorded for agent registrations. This checks configuration, not whether a selected APK fits in the worker's memory."
+        remediation: null
+        classification: config_drift
+        details:
+          operation_timeout_ms: 120000
+  - id: kuna
+    configured: false
+    available: false
+    providerVersion: null
+    registrationEnvironment:
+    checks[1]:
+      - name: installation
+        ok: false
+        code: not_configured
+        detail: "Set REA_KUNA_COMMAND to the absolute path of a caller-supplied kuna executable (verified with 1.833). REA does not download, install or update Kuna."
+        remediation: "Set REA_KUNA_COMMAND to the absolute path of a caller-supplied kuna executable (verified with 1.833). REA does not download, install or update Kuna."
+        classification: missing_analysis_engine
+        details:
+          configured: false
+checks[15]:
+  - name: node
+    ok: true
+    classification: healthy
+    detail: 26.13.0
+    details:
+      runtime: node
+      version: 26.13.0
+  - name: host
+    ok: true
+    classification: healthy
+    detail: win32 x64
+  - name: hopper
+    ok: false
+    classification: missing_analysis_engine
+    remediation: "Run rea setup to install Hopper, or set HOPPER_LAUNCHER_PATH."
+  - name: ghidra
+    ok: true
+    classification: healthy
+    detail: "C:\\Tools\\ghidra_12.1.4_PUBLIC"
+  - name: ghidra-platform
+    ok: true
+    classification: healthy
+    detail: win32
+  - name: ghidra-architecture
+    ok: true
+    classification: healthy
+    detail: x64
+  - name: ghidra-installation
+    ok: true
+    classification: healthy
+    detail: "C:\\Tools\\ghidra_12.1.4_PUBLIC\\Ghidra\\application.properties"
+  - name: ghidra-version
+    ok: true
+    classification: healthy
+    detail: 12.1.4
+  - name: ghidra-headless
+    ok: true
+    classification: healthy
+    detail: "C:\\Tools\\ghidra_12.1.4_PUBLIC\\support\\analyzeHeadless.bat"
+  - name: ghidra-native_decompiler
+    ok: true
+    classification: healthy
+    detail: "C:\\Tools\\ghidra_12.1.4_PUBLIC\\Ghidra\\Features\\Decompiler\\os\\win_x86_64\\decompile.exe reports pe x86_64, which matches win32/x64"
+  - name: ghidra-java
+    ok: true
+    classification: healthy
+    detail: "21.0.13; 64-bit; JDK; C:\\Tools\\jdk21\\jdk-21.0.13+9; accepted a 64-bit full JDK 21 or newer"
+  - name: ghidra-native_authority
+    ok: true
+    classification: healthy
+    detail: "Verified Windows native Job Object, private DACL, and reparse-safe handle controls; local NTFS only."
+  - name: ida-registration
+    ok: false
+    classification: missing_analysis_engine
+    detail: IDA MCP registration is not configured.
+    remediation: Set REA_IDA_MCP_CONFIG to your upstream IDA MCP registration JSON; see docs/ida-provider.md.
+  - name: jadx
+    ok: true
+    classification: healthy
+    detail: "JADX MCP bridge JAR validated at C:\\Users\\piotr\\.local\\share\\rea\\android\\jadx-headless-mcp-0.7.1-all.jar; its path is recorded for agent registrations. This checks configuration, not whether a selected APK fits in the worker's memory."
+    details:
+      operation_timeout_ms: 120000
+  - name: kuna-installation
+    ok: false
+    classification: missing_analysis_engine
+    detail: "Set REA_KUNA_COMMAND to the absolute path of a caller-supplied kuna executable (verified with 1.833). REA does not download, install or update Kuna."
+    remediation: "Set REA_KUNA_COMMAND to the absolute path of a caller-supplied kuna executable (verified with 1.833). REA does not download, install or update Kuna."
+    details:
+      configured: false
+identity:
+  cli_package_version: 6.8.0
+  expected_skill_version: "49"
+  sdk:
+    server: 2.3.1
+    client_test: 2.3.1
+    core: 2.3.1
+  catalog:
+    counts:
+      cli_commands: 175
+      mcp_tools: 229
+      mcp_prompts: 6
+    digests:
+      tools_sha256: a98940ba69acd9c1781d180cee362d4ddab18f77eefdd3e3216f10e1bf98e5e9
+      prompts_sha256: 9609379442110570cd52fdea61a777242350873bc28958f54827ca3590e680b7
+      combined_sha256: fe938a7c6eba3763b22ae2022de76dc4a7812d35d86f1d4efd36b9962b04da0b
+  live_server:
+    state: unknown
+    remediation: Call binary_session in the active client to inspect the running server identity.
+  installations:
+    paths[2]: "C:\\Users\\piotr\\AppData\\Local\\npm-cache\\_npx\\af752b90495482d7\\node_modules\\.bin\\rea","C:\\Users\\piotr\\AppData\\Local\\npm-cache\\_npx\\af752b90495482d7\\node_modules\\.bin\\rea.cmd"
+    state: multiple
+  skill:
+    installed_version: "49"
+    installed_tool_count: 229
+    state: aligned
+    remediation: null
+  registrations[1]:
+    - client: claude_code
+      config_path: "C:\\Users\\piotr\\.claude.json"
+      command[7]: cmd.exe,/d,/c,npx,"-y",rea-agents@6.8.0,mcp
+      package_reference: rea-agents@6.8.0
+      state: aligned
+      remediation: null
+
