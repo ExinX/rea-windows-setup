@@ -1,3 +1,6 @@
+> Historical proposal draft. Claims below are not current verification results.
+> See evidence/README.md and rerun the revised checks before reusing these claims.
+
 # Upwork proposal — "AI Agent Engineer — REA, Claude Code, MCP & Custom AI Employees"
 
 Paste into the proposal box. Keep it short; the repo does the talking.

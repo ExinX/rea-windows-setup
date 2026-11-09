@@ -1,3 +1,6 @@
+> Historical proposal draft. Claims below are not current verification results.
+> See evidence/README.md and rerun the revised checks before reusing these claims.
+
 # Upwork proposal — REA + AI Agents (7 required questions)
 
 Job: "AI Agent Engineer — REA (Reverse Engineer Anything), Claude Code, MCP & Custom AI Employees"

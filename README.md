@@ -8,30 +8,13 @@ This repo exists because REA's Windows path has several non-obvious failure
 modes that the official docs don't cover. Everything here was found by reading
 the running server's own capability report and the app binary, then testing.
 
-## Results
+## Verification status
 
-| | Tools |
-|---|---|
-| Total in REA 6.5.0 | 207 |
-| Available with no target open | 86 |
-| **Available after this setup** | **110** |
-| Plus tools that unlock once a binary is open | **~182 usable** |
-
-Engines live: **Ghidra 12.1.4** (native PE/ELF/Mach-O) and
-**jadx-headless-mcp 0.7.1** (Android APK/DEX).
-
-## Verified, with evidence
-
-Every claim below has a captured run in `evidence/`.
-
-| Capability | Tool | Evidence |
-|---|---|---|
-| Native decompilation | Ghidra 12.1.4 | `notepad.exe` → 794 procedures, full string inventory |
-| Android decompilation | jadx 0.7.1 | real APK → class tree, manifest, xrefs |
-| Android resources | apktool 2.11.1 | decoded AndroidManifest + string resources |
-| WASM inspection | WABT 1.0.42 | `inspect_wasm_artifact` on a hand-built module |
-| Packet capture | tshark 4.6.9 | 48 KB live capture → structured Evidence |
-| Android device | adb 37.0.2 | 24 `*_adb_*` tools flipped available |
+This repository contains a Windows integration toolkit around upstream REA,
+not a new analysis engine. Historical runs and their limits are indexed in
+[evidence/README.md](evidence/README.md). Old tool counts are not execution guarantees.
+The revised checks have regression tests; real Windows provider checks must be
+rerun on the intended machine. REA 6.5.0 and 6.8.0 results are kept distinct.
 
 ## The four Windows gotchas
 
@@ -75,7 +58,7 @@ feature look unavailable. It isn't. Set the absolute path and use
 
 ## What is genuinely blocked on Windows
 
-Read from `createServer.js`, not guessed:
+Historical observations for the investigated REA release (not a current cross-version guarantee):
 
 ```
 packetCaptureEnabled  = linux && absolute(REA_TSHARK_COMMAND)
@@ -94,32 +77,59 @@ Also Windows-specific: `annotate_native_function` is disabled
 ("Windows Ghidra P0 does not admit database mutation"). Analysis is read-only;
 you cannot rename functions in the Ghidra database.
 
-## Setup
+## Portable setup and checks
+
+Use Node.js supported by your selected REA release. Install providers separately.
+The scripts no longer depend on a particular username, npm cache or tool folder.
+By default ordinary checks request REA 6.8.0; LU/restart checks request 6.5.0.
+`npx` may download that exact package. Override with `--version X.Y.Z` or
+`REA_VERSION`. A mismatched reported server version fails the run.
+
+For an existing local installation use `--entry <absolute-path-to-rea.mjs>` or
+`REA_ENTRY`. No cache path is guessed. For an existing MCP registration use
+`--config <path>` with `mcpServers.rea.command`, `args`, and optional `env`.
+Only use configurations you trust: their command is executed. Config/entry mode
+records the actual reported version rather than assuming a requested version.
+
+Provider discovery uses the process environment and REA's discovery. Set absolute
+paths appropriate to your machine: `GHIDRA_INSTALL_DIR`, `JAVA_HOME`,
+`REA_JADX_MCP_JAR`, `REA_APKTOOL_COMMAND`, `REA_TSHARK_COMMAND`,
+`REA_CAPINFOS_COMMAND`, `REA_WABT_BIN_DIRECTORY`, `REA_ADB_PATH` as needed.
+The example MCP config inherits these settings; to test a self-contained config,
+put explicit paths and PATH in its env block. Placeholders are not expanded.
 
 ```powershell
-# 1. engines
-#    Ghidra 12.1.4 + Temurin JDK 21 under C:\Tools
-#    jadx-headless-mcp-0.7.1-all.jar (SHA-256 6e5eacf5...73ff75)
-
-# 2. env (User scope)
-[Environment]::SetEnvironmentVariable("GHIDRA_INSTALL_DIR","C:\Tools\ghidra_12.1.4_PUBLIC","User")
-[Environment]::SetEnvironmentVariable("JAVA_HOME","C:\Tools\jdk21\jdk-21.0.13+9","User")
-[Environment]::SetEnvironmentVariable("REA_JADX_MCP_JAR","...\jadx-headless-mcp-0.7.1-all.jar","User")
-
-# 3. MCP config with its own env block — see .claude.json.example
+node --test tests/*.test.mjs
+node scripts/rea-audit.mjs
+node scripts/rea-smoke.mjs --target C:\Windows\System32\notepad.exe
+node scripts/rea-config-check.mjs --config C:\path\to\claude.local.json
+node scripts/rea-jadx-check.mjs --apk C:\fixtures\sample.apk
+node scripts/rea-capability-check.mjs --apk C:\fixtures\sample.apk --pcap C:\fixtures\sample.pcapng
+node scripts/rea-win-check.mjs --pcap C:\fixtures\sample.pcapng --wasm C:\fixtures\left.wasm --wasm-right C:\fixtures\right.wasm
+node scripts/rea-lu-check.mjs --entry C:\path\to\rea-6.5.0\scripts\rea.mjs
+node scripts/rea-lu-restart-sim.mjs
 ```
 
-## Verify
+Config check deliberately strips inherited provider variables and PATH; its
+configuration must supply everything needed. Restart simulation is Windows-only
+and reads Machine/User environment from the registry. It tests that environment,
+not the LU GUI itself. LU check tests the selected REA entry, not whether LU
+actually launches that same entry.
 
-```powershell
-node scripts/rea-audit.mjs          # capability counts + what's gated and why
-node scripts/rea-win-check.mjs      # pcap + WASM
-node scripts/rea-capability-check.mjs  # apktool + jadx + tshark
-node scripts/rea-config-check.mjs   # strictest: config-only env
-```
+Every tool-level error fails its check, failures exit nonzero, and capability
+reports distinguish available, unavailable and unknown. Missing fixture paths
+fail explicitly. `target_required` remains unavailable until a new session report
+says otherwise; reported availability still does not prove execution.
+Binary checks open a target, require overview evidence and request procedures
+and strings. They do not claim pseudocode/decompilation verification.
+WASM comparison passes complete inspection evidence as left/right with scope
+both; omitting --wasm-right compares the same artifact to itself.
 
-Each script spawns the MCP server over stdio, performs a real handshake, calls
-tools, and prints PASS/FAIL. No mocks.
+Full results are saved to unique JSONL files, including actual server identity;
+use `--output <directory>` to select a destination. Old logs are never overwritten.
+Inspect transcript stderr for provider diagnostics. Do not commit raw new runs
+without reviewing their contents. No environment values or API keys are logged
+by the runner itself. `--timeout <milliseconds>` controls each RPC deadline.
 
 ## Why this matters
 
