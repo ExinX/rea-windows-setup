@@ -38,7 +38,7 @@ usually cheaper and more stable. REA's real value is the evidence trail: functio
 names, addresses, strings you can verify, not a plausible-sounding guess.
 
 Repo with the scripts, the config template, and captured evidence:
-`<YOUR GITHUB URL HERE>`
+**https://github.com/ExinX/rea-windows-verified**
 
 Happy to walk through the setup live, or start with a small paid pilot on one of
 your apps so you can see the output quality before committing to anything bigger.
